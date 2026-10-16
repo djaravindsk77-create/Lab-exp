@@ -1,0 +1,135 @@
+For Experiment 10: Trigger a Jenkins Build Using a GitHub Webhook, we'll connect your GitHub repository `gitexpp3` to Jenkins so that every push to GitHub can trigger a build automatically.
+
+You need Jenkins installed and running on your laptop. If you're using Windows, Jenkins can run locally, but GitHub cannot directly reach `localhost`; we'll address that when configuring the webhook.
+
+### Step 1: Start Jenkins
+
+* Open your browser and visit `http://localhost:8080`.
+
+* Sign in to Jenkins.
+
+* If Jenkins isn't installed, download it from [the official Jenkins website](https://www.jenkins.io/download/).
+
+### Step 2: Create a new Jenkins job
+
+![Jenkins Build Jobs - How to create and trigger build jobs in Jenkins?](https://images.openai.com/static-rsc-4/nVeJNk6dHbW7Hab0GMy2EV9XPqri24bApvjF1Wrm3WSyZJy6d01o6l2cinFy07mNBHGUVrTaUUmOs-50fZoysruCsouy32_9wF8VP5b7ZTxi3EhVqJUaYOFHDolVa7g9FopBb_sUlCMtn2FRp3WBCEAAf8WE5pJRNursqPC32IDsgz3QlZY-CoUAQoQOZKIB?purpose=fullsize)
+
+* Click New Item.
+
+* Enter the job name `GitHub-Auto-Build`.
+
+* Select Freestyle project.
+
+* Click OK.
+
+### Step 3: Connect your GitHub repository
+
+Under Source Code Management:
+
+* Select Git.
+
+* Enter your repository URL:
+
+```text
+https://github.com/djaravindsk77-create/gitexpp3.git
+```
+
+* For a public repository, you can usually leave Credentials as `- none -`.
+
+* Set the branch to:
+
+```text
+*/main
+```
+
+### Step 4: Enable the webhook trigger
+
+Under Build Triggers, check:
+
+`GitHub hook trigger for GITScm polling`
+
+### Step 5: Add a build step
+
+Under Build Steps, click Add build step.
+
+On Windows, select Execute Windows batch command and enter:
+
+```bat
+echo GitHub webhook build started
+echo Build successful
+```
+
+Click Save.
+
+### Step 6: Configure the GitHub webhook
+
+![How to Integrate Jenkins with GitHub - DevOpslover](https://images.openai.com/static-rsc-4/m5mr8FAqwoTSyxR25fvFmzK1jCqK8K2NBVhTis5oT7MQez0s2vPtjzexph6SwRCqnMvw1N7qF_J2G5qMbBS7iHTt_0KI_ofl-IJrdTpMdWp1IS0X_F_eETGpFIM2KQsw_iNuXk9HvDK0FPeKsmUu_vIJGfZ8c7qlA-ZH5nIZZuVNKfXlAd5AH1F93msasap1?purpose=fullsize)
+
+Open [your GitHub repository](https://github.com/djaravindsk77-create/gitexpp3).
+
+* Go to Settings → Webhooks.
+
+* Click Add webhook.
+
+* Enter the following:
+
+| Field        | Value                                          |
+| ------------ | ---------------------------------------------- |
+| Payload URL  | http://YOUR-PUBLIC-JENKINS-URL/github-webhook/ |
+| Content type | application/json                               |
+| Events       | Just the push event                            |
+| Active       | Checked                                        |
+
+4\. Click Add webhook.
+
+Important: Replace `YOUR-PUBLIC-JENKINS-URL` with the publicly reachable address of your Jenkins server. `http://localhost:8080/github-webhook/` will not work for GitHub webhooks because GitHub cannot access your laptop's localhost. For a local lab, you need a properly secured tunnel or public server. Don't expose Jenkins directly to the internet without appropriate security.
+
+### Step 7: Test the integration
+
+Once the webhook can reach Jenkins, make a change in your local repository and push it:
+
+```bash
+git add .
+git commit -m "Test Jenkins webhook"
+git push origin main
+```
+
+### Step 8: Verify the build
+
+* Open Jenkins.
+
+* Select `GitHub-Auto-Build`.
+
+* Check Build History.
+
+* Click the latest build and open Console Output.
+
+Expected output:
+
+```text
+GitHub webhook build started
+Build successful
+Finished: SUCCESS
+```
+
+If the build runs automatically after the push, your webhook integration is working.
+
+### All important steps in short
+
+* Start Jenkins.
+
+* Create a Freestyle project.
+
+* Connect the GitHub repository.
+
+* Enable GitHub hook trigger for GITScm polling.
+
+* Add a Windows batch build step.
+
+* Configure the GitHub webhook.
+
+* Push a change to `main`.
+
+* Verify the build in Jenkins.
+
+Result: A Jenkins job was configured to build automatically when changes were pushed to the GitHub repository through a webhook, demonstrating continuous integration.
