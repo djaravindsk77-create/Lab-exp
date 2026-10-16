@@ -1,0 +1,84 @@
+For Experiment 9: Build a Docker Image Using GitHub Actions, we'll use your existing repository `gitexpp3`. This experiment is about automating Docker image creation whenever code is pushed to GitHub.
+
+### Step 1: Create a Dockerfile
+
+Open your [GitHub repository](https://github.com/djaravindsk77-create/gitexpp3).
+
+Click Add file → Create new file and enter the filename:
+
+`Dockerfile`
+
+Paste this simple configuration for a static website:
+
+```dockerfile
+
+FROM nginx:alpine
+COPY index.html /usr/share/nginx/html/index.html
+EXPOSE 80
+```
+
+Click Commit changes.
+
+### Step 2: Create the workflow file
+
+Create another file with this exact path:
+
+`.github/workflows/docker-build.yml`
+
+Paste the following YAML:
+
+```yaml
+
+name: Build Docker Image
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker build -t my-app-image .
+```
+
+Click Commit changes and save it to `main`.
+
+### Step 3: Check the workflow
+
+![Self-Hosted CI/CD Pipeline for Node.js App w/ Gitea Actions & Docker | Blog](https://images.openai.com/static-rsc-4/GMvZLRdefj30ytQ6iUfipbO1zDJfA6BDKcZD3kwkeHi0xYYf7VyC2sKVbMEaJmWVjS79Fn7oUcUTUvPQXEDHJS6jQqUmKlrNqt1XqHiNNsMZfVnLzMvvD8eSpiPSbiAQdLN4zPdWLAaumDiA9akwMWul7kzI7hq09wl-krLrB70UBVG6lOqmn0HdYNGHuiXf?purpose=fullsize)
+
+* Open the repository's Actions tab.
+
+* Select Build Docker Image.
+
+* Click the latest workflow run.
+
+* Open the `build` job.
+
+* Check the Build Docker Image step.
+
+You should see output indicating that the Docker image was built successfully.
+
+### All commands in order
+
+If you prefer to create and push the files using your local terminal, the relevant Git commands are:
+
+* `git add .`
+
+* `git commit -m "Add Docker build workflow"`
+
+* `git push origin main`
+
+GitHub Actions runs automatically after the push.
+
+### Result for your lab record
+
+A Dockerfile was created for the static website, and a GitHub Actions workflow was configured to build the Docker image automatically whenever changes were pushed to the `main` branch. The successful image build was verified in the Actions logs.
+
+Note: This workflow builds the image on GitHub's temporary runner. It does not publish the image to Docker Hub or another container registry.
